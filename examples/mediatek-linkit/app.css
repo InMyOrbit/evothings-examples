@@ -52,6 +52,11 @@ div.deviceContainer {
 	text-align: center;
 }
 
+#mapView {
+	height: 80%;
+	width: 100%;
+}
+
 #connectingIndicator {
 	width:20%;
 	display: table-cell;
@@ -59,3 +64,16 @@ div.deviceContainer {
 	border: solid 1px;
 	background-color: #ffffff;
 }
+
+#map-canvas { 
+	height: 100%;
+	margin: 0; 
+	padding: 0;
+}
+
+/* This is added to solve issue with Google Maps JavaScript API */
+canvas {
+	background-color:inherit;
+
+}
+

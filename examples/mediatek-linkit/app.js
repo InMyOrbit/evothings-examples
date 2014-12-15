@@ -17,17 +17,33 @@
 
 document.addEventListener('deviceready',function(){ app.initialize() }, false);
 
-var app = {};
+var app = {}
 
-app.TIME_BETWEEN_REQUESTS = 2000
+app.TIME_BETWEEN_REQUESTS = 5000
 
 app.initialize = function()
 {
 
+	var mapOptions = {
+		center: { lat: 59.3380131, lng: 18.063002200000028},
+    	zoom: 13,
+    	
+    	draggable: true,
+    	panControl: false,
+    	mapTypeControl: false,
+    	streetViewControl: false,
+    	zoomControl:false,
+    	
+	}
+	
+	app.map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions)
+	
 }
 
 app.connect = function() 
 {
+
 	var IPAdress = $('#IPAdress').val()
 
 	$('#startView').hide()
@@ -35,28 +51,47 @@ app.connect = function()
 	$('#connectingStatus').text('Connecting to ' + IPAdress)
 	$('#connectingView').show()
 	
-	console.log('Trying to connect to' + IPAdress)
-
+	console.log('Trying to connect to ' + IPAdress)
 
 	app.dataFetcher = setInterval(function() { app.fetchData(); }, app.TIME_BETWEEN_REQUESTS);
-
-
 }
 
 app.fetchData = function()
 {	
 	console.log('Trying to fetch data...')
-	//Kolla in get JSON
-	//$.load('http://www.example.com', app.dataReceived())
 
-	$.getJSON('http://echo.jsontest.com/lat/51.000/long/18.9000', app.dataReceived())
-	
+	$.getJSON('http://192.168.20.110', app.dataReceived)	
+
+	//$.getJSON('http://echo.jsontest.com/lat/59.3380131/long/18.063002200000028', app.dataReceived)	
 }
 
 app.dataReceived = function(data, textStatus, xhr)
 {
-	console.log('Received data')
-	console.log('Data:' + data)
+	$('#connectingView').hide()
+	$('#mapView').show()
+
+	var longitude = parseFloat(data['long'])
+	var latitude = parseFloat(data['lat']) 
+	var positionString = 'Latitude: ' + latitude + ', Longitude: ' + longitude
+	
+	console.log('Received data - ' + positionString)
+	
+	//app.marker.setMap(null)
+
+
+	var markerPosition = new google.maps.LatLng(latitude, longitude)
+
+	app.marker = new google.maps.Marker({
+    	position: markerPosition,
+    	title: positionString
+	})
+
+	app.marker.setMap(app.map)
+
+	app.map.panTo(app.marker.getPosition())
+
+	clearInterVal(app.dataFetcher)
+	
 }
 
 app.disconnect = function()
@@ -65,11 +100,8 @@ app.disconnect = function()
 	$('#startView').show()
 }
 
-
-
 app.startScan = function()
 {
-
 	app.disconnect();
 
 	console.log('Scanning started...');
