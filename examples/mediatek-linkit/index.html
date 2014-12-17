@@ -22,13 +22,10 @@
 	<script src="cordova.js"></script>
 	<script src="libs/evothings/evothings.js"></script>
 	<script src="libs/jquery/jquery.js"></script>
-	
   
 	 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxtoNnX65Z_Xru7DS64ZJ9fcXDCzp3h7w"></script>
   
 	 <script src="app.js"></script>
-
-
 
 </head>
 
@@ -52,7 +49,7 @@
 
 	<h2>Enter IP-address of the LinkIt ONE</h2>
 	
-	<input id="IPAdress" value="192.168.1.1" type="url">
+	<input id="IPAdress" value="192.168.20.149" type="url">
 
 	<button class="green wide" onclick="app.connect()"> Connect </button>
 
@@ -73,6 +70,12 @@
 <div id="mapView" style="display:none">
 
   <div id="map-canvas"></div>
+
+  <div>
+
+  	<button class="red wide" onclick="app.disconnect()"> Disconnect </button>
+  
+  </div>
 
 </div>
 </body>
