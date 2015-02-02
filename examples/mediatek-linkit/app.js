@@ -1,5 +1,5 @@
 //
-// Copyright 2014, Evothings AB
+// Copyright 2015, Evothings AB
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,15 +16,21 @@
 //
 
 var app = {}
-app.TIME_BETWEEN_REQUESTS = 5000
+
+// Time between map updates in milli seconds. 
+app.TIME_BETWEEN_REQUESTS = 10000
+
+// Map init position. 
+app.MAP_INIT_LATITUDE = 59.3383
+app.MAP_INIT_LONGITUDE = 18.0621
 
 app.initializeMap = function initialize() 
 {
 
-	var mapOptions = {
-		center: { lat: 59.3383, lng: 18.0621},
+	var mapOptions = 
+	{
+		center: { lat: app.MAP_INIT_LATITUDE, lng:app.MAP_INIT_LONGITUDE },
     	zoom: 13,
-    	
     	draggable: true,
     	panControl: false,
     	mapTypeControl: false,
@@ -35,8 +41,6 @@ app.initializeMap = function initialize()
 	app.map = new google.maps.Map(document.getElementById('map-canvas'),
             mapOptions)
 }
-
-google.maps.event.addDomListener(window, 'load', app.initializeMap);
 
 app.connect = function() 
 {
@@ -49,7 +53,9 @@ app.connect = function()
 
 	console.log('Trying to connect to ' + app.IPAdress)
 
-	app.fetchTimer = setInterval(function() { app.fetchData(); }, app.TIME_BETWEEN_REQUESTS);
+	app.fetchTimer = setInterval(function() { app.fetchData() }, app.TIME_BETWEEN_REQUESTS)
+
+	app.fetchData()
 }
 
 app.fetchData = function()
@@ -61,36 +67,42 @@ app.fetchData = function()
 
 app.dataReceived = function(data, textStatus, xhr)
 {
-	$('#connectingView').hide()
-	$('#mapView').show()
-	google.maps.event.trigger(app.map, "resize")
 
+	if($('#mapView').css('display') == 'none') 
+	{
+		$('#connectingView').hide()
+		$('#mapView').show()
+		google.maps.event.trigger(app.map, "resize")
+		console.log('Showing off')
+	}
 
-	var longitude = parseFloat(data['long'])
+	// Parse response and convert
+	var longitude = data['long']
 	var longitudeDecimalPart = longitude % 1
 	longitude = longitude - longitudeDecimalPart + (longitudeDecimalPart * 100 / 60)
 
-	var latitude = parseFloat(data['lat']) 
+	var latitude = data['lat'] 
 	var latitudeDecimalPart = latitude % 1
 	latitude = latitude - latitudeDecimalPart + (latitudeDecimalPart * 100 / 60)
 
-	var positionString = 'Latitude: ' + latitude + ', Longitude: ' + longitude
-	
-	console.log('Received data - ' + positionString)
-	
-	if(app.marker) {
+	console.log('Received data - Latitude: ' + latitude + ', Longitude: ' + longitude)
+
+	// Remove current marker if available. 	
+	if(app.marker) 
+	{
 		app.marker.setMap(null)
 	}
 
+	// Create a new parker and add it too map.
 	var markerPosition = new google.maps.LatLng(latitude, longitude)
 
 	app.marker = new google.maps.Marker({
-    	position: markerPosition,
-    	title: positionString
-	})
+    	position: markerPosition
+    })
 
 	app.marker.setMap(app.map)
 
+	// Center map around the marker.
 	app.map.panTo(app.marker.getPosition())
 }
 

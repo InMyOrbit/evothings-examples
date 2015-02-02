@@ -153,7 +153,7 @@ end
 
 def buildMediaTekLinkIt
 	destPath = 'examples/mediatek-linkit'
-	copyCommon(destPath)
+	copyUI(destPath)
 	copyJQuery(destPath)
 end
 
