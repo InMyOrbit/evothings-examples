@@ -30,16 +30,16 @@ app.initializeMap = function initialize()
 	var mapOptions = 
 	{
 		center: { lat: app.MAP_INIT_LATITUDE, lng:app.MAP_INIT_LONGITUDE },
-    	zoom: 13,
-    	draggable: true,
-    	panControl: false,
-    	mapTypeControl: false,
-    	streetViewControl: false,
-    	zoomControl:false,	
+		zoom: 13,
+		draggable: true,
+		panControl: false,
+		mapTypeControl: false,
+		streetViewControl: false,
+		zoomControl:false,	
 	}
 	
 	app.map = new google.maps.Map(document.getElementById('map-canvas'),
-            mapOptions)
+			mapOptions)
 }
 
 app.connect = function() 
@@ -76,14 +76,9 @@ app.dataReceived = function(data, textStatus, xhr)
 		console.log('Showing off')
 	}
 
-	// Parse response and convert
+	// Read response
 	var longitude = data['long']
-	var longitudeDecimalPart = longitude % 1
-	longitude = longitude - longitudeDecimalPart + (longitudeDecimalPart * 100 / 60)
-
 	var latitude = data['lat'] 
-	var latitudeDecimalPart = latitude % 1
-	latitude = latitude - latitudeDecimalPart + (latitudeDecimalPart * 100 / 60)
 
 	console.log('Received data - Latitude: ' + latitude + ', Longitude: ' + longitude)
 
@@ -97,8 +92,8 @@ app.dataReceived = function(data, textStatus, xhr)
 	var markerPosition = new google.maps.LatLng(latitude, longitude)
 
 	app.marker = new google.maps.Marker({
-    	position: markerPosition
-    })
+		position: markerPosition
+	})
 
 	app.marker.setMap(app.map)
 
