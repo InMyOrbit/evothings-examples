@@ -28,7 +28,7 @@ $(document).ready(function() {
 
 var app = {}
 
-app.PORT = 1337
+app.PORT = 4538
 app.socketId
 
 app.connect = function() {
@@ -86,7 +86,6 @@ app.handleVerifiedResponse = function(response) {
   var pin_value = parseInt(response.charAt(2))
 
   var domId = '#led' + pin
-  var circleClass = 'led' + pin
 
 	if ($(domId).length == 0) {
 	
@@ -99,14 +98,14 @@ app.handleVerifiedResponse = function(response) {
 
 	if (pin_value == 1) {
 
-		$(domId).removeClass('ledOff').addClass(circleClass)
+		$(domId).removeClass('ledOff').addClass('ledOn')
 		$(domId).unbind('click').click(function(){
 			app.ledOff(domId)
 			})
 	}
 	else {
 
-		$(domId).removeClass(circleClass).addClass('ledOff')
+		$(domId).removeClass('ledOn').addClass('ledOff')
 		$(domId).unbind('click').click(function(){
 			app.ledOn(domId)
 			})	

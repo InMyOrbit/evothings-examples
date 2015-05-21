@@ -158,7 +158,7 @@ def buildMediaTekLinkIt
 end
 
 def buildMediaTekLinkItConnect
-	destPath = 'examples/mediatek-linkit-connect'
+	destPath = 'examples/mediatek-linkit-connect/app'
 	copyCommon(destPath)
 	copyJQuery(destPath)
 end
